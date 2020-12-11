@@ -1,8 +1,9 @@
 import tensorflow as tf
 import os
 
-tfrecords_filename = "/Users/nana/Desktop/CNN/Challenge-20201201/Challenge_train/Challenge_train/train_data.tfrecord"
-#test_data_tfrecords =
+train_tfrecords_filename= '/Users/nana/Desktop/CNN/Challenge-20201201/Challenge_train/Challenge_train/train_data.tfrecord'
+test_tfrecords_filename = '/Users/nana/Desktop/CNN/Challenge-20201201/Challenge_test/Challenge_test/test_data.tfrecord'
+
 def decoder(tfrecord_file, is_train_dataset=None):
     dataset = tf.data.TFRecordDataset(tfrecord_file)
     feature_discription = {
@@ -10,7 +11,7 @@ def decoder(tfrecord_file, is_train_dataset=None):
         'label': tf.io.FixedLenFeature([], tf.int64)
     }
  
-    def _parse_example(example_string): 
+    def _parse_example(example_string): # 解码每一个example
         feature_dic = tf.io.parse_single_example(example_string, feature_discription)
         feature_dic['image_raw'] = tf.io.decode_jpeg(feature_dic['image_raw'])
         return feature_dic['image_raw'], feature_dic['label']
@@ -25,5 +26,6 @@ def decoder(tfrecord_file, is_train_dataset=None):
  
     return dataset
  
-train_data = decoder(tfrecords_filename, 1)
-#test_data = decoder(test_tfrecord_file)
+train_data = decoder(train_tfrecords_filename, 1)
+test_data = decoder(test_tfrecords_filename)
+
