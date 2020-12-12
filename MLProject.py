@@ -14,6 +14,7 @@ from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras.optimizers import SGD    
 from keras.preprocessing import image
+from keras.applications import VGG16
 from tqdm import tqdm
 from PIL import Image
 import os
@@ -32,11 +33,29 @@ def main():
     testDataset = pd.read_csv('/home/pinz/ML/Challenge-20201208/Challenge_test/Challenge_test/test.anno.txt')
     testDataset.head()
     
+    """
+    trainImagePath = '/home/pinz/ML/Project2020-2021/train_data/'
+    train_image = []
+    for imgTrain in os.listdir(trainImagePath):
+    imgTrain = image.load_img(imgTrain + trainDataset.["file_name"][i] + '.jpg')
+    imgTrain = image.img_to_array(imgTrain)
+    imgTrain = img / 255
+    train_image.append(imgTrain)
     
+    testImagePath = '/home/pinz/ML/Challenge-20201208/Challenge_test/Challenge_test/test/'
+    test_image = []
+    for imgTest in os.listdir(testImagePath):
+    imgTest = image.load_img(imgTest + testDataset["file_name"][i] + '.jpg')
+    imgTest = image.img_to_array(imgTest)
+    imgTest = img / 255
+    test_image.append(imgTest)
+    """
+    
+    """    
     train_image = []
     
     for i in tqdm(range(trainDataset.shape[0])):
-    imgTrain = tf.keras.preprocessing.image.load_img('/home/pinz/ML/Project2020-2021/train_data/' + trainDataset['file_name'][i] + '.jpg', target_size = None)
+    imgTrain = image.load_img('/home/pinz/ML/Project2020-2021/train_data/' + trainDataset['file_name'][i] + '.jpg')
     imgTrain = image.img_to_array(imgTrain)
     imgTrain = img / 255
     train_image.append(imgTrain) 
@@ -45,10 +64,11 @@ def main():
     test_image = []
     
     for i in tqdm(range(trainDataset.shape[0])):
-    imgTest = tf.keras.preprocessing.image.load_img('/home/pinz/ML/Challenge-20201208/Challenge_test/Challenge_test/test/' + testDataset['file_name'][i] + '.jpg', target_size = None)
+    imgTest = image.load_img('/home/pinz/ML/Challenge-20201208/Challenge_test/Challenge_test/test/' + testDataset['file_name'][i] + '.jpg')
     imgTest = image.img_to_array(imgTest)
     imgTest = img / 255
     test_image.append(imgTest) 
+    """
     
     (x_train, y_train) = train_image.load_data()
     (x_test, y_test) = test_image.load_data()
@@ -82,18 +102,46 @@ def main():
     
     # Build CNN
     model = Sequential()
+    
     # Add convolutional layer
-    model.add(Conv2D(filters=16, kernel_size=(3, 3), strides=1, padding='same', activation='relu', input_shape=(img_rows, img_cols, channels)))
+    model.add(Conv2D(filters=50, kernel_size=(3, 3), strides=1, padding='same', activation='relu', input_shape=(img_rows, img_cols, channels)))
+    
+    # Add convolutional layer
+    model.add(Conv2D(filters=50, kernel_size=(3, 3), strides=1, padding='same', activation='relu', input_shape=(img_rows, img_cols, channels)))
+    
     # Add pooling layer
     model.add(MaxPooling2D(pool_size=(2, 2), strides=2))
-    # Prepare data for fully connected neural network
-    model.add(Flatten())
-    # Fully connected neural network
-    model.add(Dense(units=128, activation='relu'))
+    
     # Dropout for regularization
     model.add(Dropout(0.25))
+    
+    # Add convolutional layer
+    model.add(Conv2D(filters=125, kernel_size=(3, 3), strides=1, padding='same', activation='relu', input_shape=(img_rows, img_cols, channels)))
+    
+    # Add pooling layer
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=2))
+    
+    # Dropout for regularization
+    model.add(Dropout(0.25))
+    
+    # Prepare data for fully connected neural network
+    model.add(Flatten())
+    
+    # Fully connected neural network
+    model.add(Dense(units=500, activation='relu'))
+    
+    # Dropout for regularization
+    model.add(Dropout(0.4))
+    
+    # Fully connected neural network
+    model.add(Dense(units=250, activation='relu'))
+    
+    # Dropout for regularization
+    model.add(Dropout(0.3))
+    
     # Output layer
     model.add(Dense(units=num_classes, activation='softmax'))
+    
     # Configure the model for training
     model.compile(loss='categorical_crossentropy', optimizer=SGD(lr=0.01), metrics=['accuracy'])
     
@@ -117,3 +165,13 @@ def main():
     return x_train, x_test, y_train, y_test, acc
     
 x_train, x_test, y_train, y_test, acc = main()
+
+
+# VGG16
+pretrained_model = VGG16(include_top = False, weights = 'imagenet')
+pretrained_model.summary()
+
+vgg_feature_train = pretrained_model.predict(train_image)
+vgg_feature_test = pretrained_model.predict(test_image)
+
+
