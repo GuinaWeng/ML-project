@@ -37,20 +37,20 @@ def main():
     trainImagePath = '/home/pinz/ML/Project2020-2021/train_data/'
     train_image = []
     for imgTrain in os.listdir(trainImagePath):
-    imgTrain = os.path.join(trainImagePath, imgTrain)
-    imgTrain = image.load_img(imgTrain)
-    imgTrain = image.img_to_array(imgTrain)
-    imgTrain = imgTrain / 255
-    train_image.append(imgTrain)
+     imgTrain = os.path.join(trainImagePath, imgTrain)
+     imgTrain = image.load_img(imgTrain)
+     imgTrain = image.img_to_array(imgTrain)
+     imgTrain = imgTrain / 255
+     train_image.append(imgTrain)
     
     testImagePath = '/home/pinz/ML/Challenge-20201208/Challenge_test/Challenge_test/test/'
     test_image = []
     for imgTest in os.listdir(testImagePath):
-    imgTest = os.path.join(testImagePath, imgTest)
-    imgTest = image.load_img(imgTest, target_size = (224, 224))
-    imgTest = image.img_to_array(imgTest)
-    imgTest = imgTest / 255
-    test_image.append(imgTest)
+     imgTest = os.path.join(testImagePath, imgTest)
+     imgTest = image.load_img(imgTest, target_size = (224, 224))
+     imgTest = image.img_to_array(imgTest)
+     imgTest = imgTest / 255
+     test_image.append(imgTest)
     
     
     """    
