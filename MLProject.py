@@ -33,23 +33,25 @@ def main():
     testDataset = pd.read_csv('/home/pinz/ML/Challenge-20201208/Challenge_test/Challenge_test/test.anno.txt')
     testDataset.head()
     
-    """
+    # load images
     trainImagePath = '/home/pinz/ML/Project2020-2021/train_data/'
     train_image = []
     for imgTrain in os.listdir(trainImagePath):
-    imgTrain = image.load_img(imgTrain + trainDataset.["file_name"][i] + '.jpg')
+    imgTrain = os.path.join(trainImagePath, imgTrain)
+    imgTrain = image.load_img(imgTrain)
     imgTrain = image.img_to_array(imgTrain)
-    imgTrain = img / 255
+    imgTrain = imgTrain / 255
     train_image.append(imgTrain)
     
     testImagePath = '/home/pinz/ML/Challenge-20201208/Challenge_test/Challenge_test/test/'
     test_image = []
     for imgTest in os.listdir(testImagePath):
-    imgTest = image.load_img(imgTest + testDataset["file_name"][i] + '.jpg')
+    imgTest = os.path.join(testImagePath, imgTest)
+    imgTest = image.load_img(imgTest, target_size = (224, 224))
     imgTest = image.img_to_array(imgTest)
-    imgTest = img / 255
+    imgTest = imgTest / 255
     test_image.append(imgTest)
-    """
+    
     
     """    
     train_image = []
@@ -70,8 +72,8 @@ def main():
     test_image.append(imgTest) 
     """
     
-    (x_train, y_train) = train_image.load_data()
-    (x_test, y_test) = test_image.load_data()
+    (x_train, y_train) = np.array(train_image)
+    (x_test, y_test) = np.array(test_image)
     
     # input image dimensions
     img_rows, img_cols = 28, 28
