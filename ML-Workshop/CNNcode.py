@@ -15,7 +15,6 @@ from keras.layers import Conv2D, MaxPooling2D
 from keras.utils import to_categorical
 from keras.preprocessing import image
 from keras.applications import VGG16
-from keras.optimizers import SGD
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -55,21 +54,6 @@ def main():
     Y_test = np.array(testDF.drop([0],axis=1))
     Y_test.shape
     
-    # input image dimensions
-    img_rows, img_cols = 224, 224
-    # number of channels
-    channels = 3
-    # Total number of classes
-    num_classes = 17
-    
-    # convert labels to one-hot vectors
-    Y_train = to_categorical(Y_train, num_classes)
-    Y_test = to_categorical(Y_test, num_classes)   
-    
-    # Reshape the input to match the Keras's expectations (n_images, x_shape, y_shape, channels)
-    X_train = X_train.reshape(X_train.shape[0], img_rows, img_cols, channels)
-    X_test = X_test.reshape(X_test.shape[0], img_rows, img_cols, channels)
-    
     # Print sizes of training and test datasets
     print('Size of training data:', X_train.shape, '\n') 
     print('Size of test data:', X_test.shape, '\n') 
@@ -78,10 +62,10 @@ def main():
     model = Sequential()
     
     # Add convolutional layer
-    model.add(Conv2D(filters=50, kernel_size=(3, 3), strides=1, padding='same', activation='relu', input_shape=(img_rows, img_cols, channels)))
-    
+    model.add(Conv2D(filters=50, kernel_size=(5, 5), strides=1, padding='same', activation='relu', input_shape=(224, 224, 3)))
+   
     # Add convolutional layer
-    model.add(Conv2D(filters=50, kernel_size=(3, 3), strides=1, padding='same', activation='relu', input_shape=(img_rows, img_cols, channels)))
+    model.add(Conv2D(filters=50, kernel_size=(5, 5), strides=1, padding='same', activation='relu', input_shape=(224, 224, 3)))
     
     # Add pooling layer
     model.add(MaxPooling2D(pool_size=(2, 2), strides=2))
@@ -90,7 +74,7 @@ def main():
     model.add(Dropout(0.25))
     
     # Add convolutional layer
-    model.add(Conv2D(filters=125, kernel_size=(3, 3), strides=1, padding='same', activation='relu', input_shape=(img_rows, img_cols, channels)))
+    model.add(Conv2D(filters=125, kernel_size=(5, 5), strides=1, padding='same', activation='relu', input_shape=(224, 224, 3)))
     
     # Add pooling layer
     model.add(MaxPooling2D(pool_size=(2, 2), strides=2))
@@ -102,25 +86,22 @@ def main():
     model.add(Flatten())
     
     # Fully connected neural network
-    model.add(Dense(units=500, activation='relu'))
+    model.add(Dense(units=250, activation='relu'))
     
     # Dropout for regularization
     model.add(Dropout(0.4))
     
     # Fully connected neural network
-    model.add(Dense(units=250, activation='relu'))
+    model.add(Dense(units=128, activation='relu'))
     
     # Dropout for regularization
     model.add(Dropout(0.3))
     
     # Output layer
     model.add(Dense(units=num_classes, activation='softmax'))
-    
-    # Configure the model for training
-    model.compile(loss='categorical_crossentropy', optimizer=SGD(lr=0.01), metrics=['accuracy'])
 
     #Compiling CNN Model
-    #model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
     
     # Print model summary
     model.summary()
@@ -128,9 +109,8 @@ def main():
     #Evaluaing Model
     model.fit(X_train, Y_train, 
               epochs=10, 
-              shuffle=True, 
-              verbose=1, 
-              validation_split=0.2)
+              validation_data=(X_test, Y_test),
+              batch_size=32)
 
     #Taking image to do validation of model prediction / once done we can pass whole teting data
     img = image.load_img('/home/pinz/ML/Challenge/Challenge_test/Challenge_test/test/27-27752.jpg',target_size=(224,224,3))
