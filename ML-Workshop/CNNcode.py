@@ -86,13 +86,13 @@ def main():
     model.add(Flatten())
     
     # Fully connected neural network
-    model.add(Dense(units=250, activation='relu'))
+    model.add(Dense(units=500, activation='relu'))
     
     # Dropout for regularization
     model.add(Dropout(0.4))
     
     # Fully connected neural network
-    model.add(Dense(units=128, activation='relu'))
+    model.add(Dense(units=250, activation='relu'))
     
     # Dropout for regularization
     model.add(Dropout(0.3))
