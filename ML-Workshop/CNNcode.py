@@ -112,7 +112,11 @@ def main():
     model.summary()
 
     #Evaluaing Model
-    model.fit(X_train, Y_train, epochs=10, validation_data=(X_test, Y_test), batch_size=32)
+    model.fit(X_train, Y_train, 
+              epochs=10, 
+              shuffle=True, 
+              verbose=1, 
+              validation_split=0.2)
 
     #Taking image to do validation of model prediction / once done we can pass whole teting data
     img = image.load_img('/home/pinz/ML/Challenge/Challenge_test/Challenge_test/test/27-27752.jpg',target_size=(224,224,3))
