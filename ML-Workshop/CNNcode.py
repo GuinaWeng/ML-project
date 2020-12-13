@@ -98,7 +98,7 @@ def main():
     model.add(Dropout(0.3))
     
     # Output layer
-    model.add(Dense(units=num_classes, activation='softmax'))
+    model.add(Dense(units=17, activation='softmax'))
 
     #Compiling CNN Model
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
@@ -112,21 +112,78 @@ def main():
               validation_data=(X_test, Y_test),
               batch_size=32)
 
-    #Taking image to do validation of model prediction / once done we can pass whole teting data
-    img = image.load_img('/home/pinz/ML/Challenge/Challenge_test/Challenge_test/test/27-27752.jpg',target_size=(224,224,3))
+    #Taking 5 images to do validation of model prediction / once done we can pass whole teting data
+    img1 = image.load_img('/home/pinz/ML/Challenge/Challenge_test/Challenge_test/test/27-27752.jpg',target_size=(224,224,3))
     
-    img = image.img_to_array(img)
-    img = img/255
-    plt.imshow(img)
+    img1 = image.img_to_array(img1)
+    img1 = img1/255
+    plt.imshow(img1)
 
     #Predicting values for image we have given as input
-    proba = model.predict(img.reshape(1,224,224,3))
+    proba1 = model.predict(img1.reshape(1,224,224,3))
 
     #Display lables which has probability > 50%
     for i in range(len(classes)):   
-        if proba[0][i]> 0.5 : 
-            print("{}".format(classes[i])+" ({:.3})".format(proba[0][i]))
+        if proba1[0][i]> 0.5 : 
+            print("{}".format(classes[i])+" ({:.3})".format(proba1[0][i]))
+    
+    img2 = image.load_img('/home/pinz/ML/Challenge/Challenge_test/Challenge_test/test/27-27707.jpg',target_size=(224,224,3))
+    
+    img2 = image.img_to_array(img2)
+    img2 = img2/255
+    plt.imshow(img2)
+
+    #Predicting values for image we have given as input
+    proba2 = model.predict(img2.reshape(1,224,224,3))
+
+    #Display lables which has probability > 50%
+    for i in range(len(classes)):   
+        if proba2[0][i]> 0.5 : 
+            print("{}".format(classes[i])+" ({:.3})".format(proba2[0][i]))
+    
+    img3 = image.load_img('/home/pinz/ML/Challenge/Challenge_test/Challenge_test/test/27-27891.jpg',target_size=(224,224,3))
+    
+    img3 = image.img_to_array(img3)
+    img3 = img3/255
+    plt.imshow(img3)
+
+    #Predicting values for image we have given as input
+    proba3 = model.predict(img3.reshape(1,224,224,3))
+
+    #Display lables which has probability > 50%
+    for i in range(len(classes)):   
+        if proba3[0][i]> 0.5 : 
+            print("{}".format(classes[i])+" ({:.3})".format(proba3[0][i]))        
+    
+    img4 = image.load_img('/home/pinz/ML/Challenge/Challenge_test/Challenge_test/test/28-28035.jpg',target_size=(224,224,3))
+    
+    img4 = image.img_to_array(img4)
+    img4 = img4/255
+    plt.imshow(img4)
+
+    #Predicting values for image we have given as input
+    proba4 = model.predict(img4.reshape(1,224,224,3))
+
+    #Display lables which has probability > 50%
+    for i in range(len(classes)):   
+        if proba4[0][i]> 0.5 : 
+            print("{}".format(classes[i])+" ({:.3})".format(proba4[0][i]))
+    
+    img5 = image.load_img('/home/pinz/ML/Challenge/Challenge_test/Challenge_test/test/28-28058.jpg',target_size=(224,224,3))
+    
+    img5 = image.img_to_array(img5)
+    img5 = img5/255
+    plt.imshow(img5)
+
+    #Predicting values for image we have given as input
+    proba5 = model.predict(img5.reshape(1,224,224,3))
+
+    #Display lables which has probability > 50%
+    for i in range(len(classes)):   
+        if proba5[0][i]> 0.5 : 
+            print("{}".format(classes[i])+" ({:.3})".format(proba5[0][i]))
             
+                   
 x_train, x_test, y_train, y_test, acc = main()
 
 
@@ -136,5 +193,6 @@ pretrained_model.summary()
 
 vgg_feature_train = pretrained_model.predict(train_image)
 vgg_feature_test = pretrained_model.predict(test_image)
+
 
 
