@@ -14,6 +14,8 @@ from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras.utils import to_categorical
 from keras.preprocessing import image
+from keras.applications import VGG16
+from keras.optimizers import SGD
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -54,11 +56,23 @@ def main():
     Y_test.shape
     
     # input image dimensions
-    img_rows, img_cols = 28, 28
+    img_rows, img_cols = 224, 224
     # number of channels
-    channels = 1
+    channels = 3
     # Total number of classes
     num_classes = 17
+    
+    # convert labels to one-hot vectors
+    Y_train = to_categorical(Y_train, num_classes)
+    Y_test = to_categorical(Y_test, num_classes)   
+    
+    # Reshape the input to match the Keras's expectations (n_images, x_shape, y_shape, channels)
+    X_train = X_train.reshape(X_train.shape[0], img_rows, img_cols, channels)
+    X_test = X_test.reshape(X_test.shape[0], img_rows, img_cols, channels)
+    
+    # Print sizes of training and test datasets
+    print('Size of training data:', X_train.shape, '\n') 
+    print('Size of test data:', X_test.shape, '\n') 
 
     # Build CNN
     model = Sequential()
@@ -103,10 +117,10 @@ def main():
     model.add(Dense(units=num_classes, activation='softmax'))
     
     # Configure the model for training
-    #model.compile(loss='categorical_crossentropy', optimizer=SGD(lr=0.01), metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy', optimizer=SGD(lr=0.01), metrics=['accuracy'])
 
     #Compiling CNN Model
-    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+    #model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
     
     # Print model summary
     model.summary()
@@ -132,3 +146,15 @@ def main():
     for i in range(len(classes)):   
         if proba[0][i]> 0.5 : 
             print("{}".format(classes[i])+" ({:.3})".format(proba[0][i]))
+            
+x_train, x_test, y_train, y_test, acc = main()
+
+
+# VGG16
+pretrained_model = VGG16(include_top = False, weights = 'imagenet')
+pretrained_model.summary()
+
+vgg_feature_train = pretrained_model.predict(train_image)
+vgg_feature_test = pretrained_model.predict(test_image)
+
+
