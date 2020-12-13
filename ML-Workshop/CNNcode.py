@@ -155,7 +155,7 @@ def main():
         if proba3[0][i]> 0.5 : 
             print("{}".format(classes[i])+" ({:.3})".format(proba3[0][i]))        
     
-    img4 = image.load_img('/home/pinz/ML/Challenge/Challenge_test/Challenge_test/test/28-28035.jpg',target_size=(224,224,3))
+    img4 = image.load_img('/home/pinz/ML/Challenge/Challenge_test/Challenge_test/test/28-28175.jpg',target_size=(224,224,3))
     
     img4 = image.img_to_array(img4)
     img4 = img4/255
